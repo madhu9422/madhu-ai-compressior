@@ -1,0 +1,160 @@
+AI DOCUMENT COMPARISON ASSISTANT
+Commands and Setup Guide
+================================
+
+PROJECT FOLDER (Windows)
+C:\Users\admin\Videos\AI_Document_Comparison_Assistant_Project\ai-document-comparison-assistant
+
+1. OPEN POWERSHELL AND GO TO THE PROJECT FOLDER
+------------------------------------------------
+cd "C:\Users\admin\Videos\AI_Document_Comparison_Assistant_Project\ai-document-comparison-assistant"
+
+2. ACTIVATE THE VIRTUAL ENVIRONMENT
+-----------------------------------
+.\.venv\Scripts\Activate.ps1
+
+If PowerShell blocks activation, run:
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+
+Alternative: run commands without activating the environment:
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run app.py
+
+3. INSTALL PROJECT DEPENDENCIES
+-------------------------------
+python -m pip install -r requirements.txt
+
+If you only need the Gemini test packages:
+python -m pip install google-genai python-dotenv
+
+4. CHECK THE .env FILE
+----------------------
+Open it:
+notepad .env
+
+It should contain:
+GEMINI_API_KEY=YOUR_VALID_GEMINI_API_KEY
+GEMINI_MODEL=gemini-3.8-flash
+
+Replace the placeholder with your own valid key. Never share the key in chat,
+screenshots, or public repositories. Do not upload .env to GitHub.
+If a key was exposed, revoke it and create a new one.
+
+5. TEST THE GEMINI API KEY
+--------------------------
+Run:
+python test_key.py
+
+Expected success message:
+SUCCESS! Gemini API is working.
+
+If it fails:
+- Read the full error message.
+- Confirm .env is in the project folder.
+- Confirm test_key.py loads .env with load_dotenv(override=True).
+- Confirm GEMINI_API_KEY is set and the key is valid.
+- Never print or share the actual API key.
+- For 401 / API_KEY_INVALID: create/check a valid key in Google AI Studio.
+- For 503 / UNAVAILABLE: wait a little and retry; the service may be busy.
+
+6. RUN THE APP LOCALLY
+----------------------
+python -m streamlit run app.py
+
+Stop the local app with:
+Ctrl + C
+
+Check Python syntax:
+python -m py_compile app.py comparison.py document_reader.py report_generator.py
+
+7. STREAMLIT CLOUD DEPLOYMENT
+-----------------------------
+A. Push project files to GitHub. Include:
+   app.py
+   comparison.py
+   document_reader.py
+   report_generator.py
+   requirements.txt
+   README.md
+   .gitignore
+
+B. Do NOT upload:
+   .env
+   .venv/
+   private PDFs or reports containing personal information
+   API keys or passwords
+
+C. In Streamlit Community Cloud:
+   - Open https://share.streamlit.io/
+   - Select Create app / Deploy an app
+   - Select your GitHub repository and branch
+   - Main file path: app.py (if app.py is at repository root)
+   - Open Advanced settings / Secrets
+
+D. Put secrets in TOML format:
+   GEMINI_API_KEY = "YOUR_VALID_GEMINI_API_KEY"
+   GEMINI_MODEL = "gemini-3.8-flash"
+
+Replace the placeholder with the actual key in Streamlit Secrets only.
+Save settings and restart/reboot the app.
+
+8. IF STREAMLIT CLOUD STILL FAILS
+---------------------------------
+- Confirm Streamlit Secrets use the exact name GEMINI_API_KEY.
+- Confirm the key has no extra spaces or line breaks.
+- Confirm comparison.py reads Streamlit Secrets as well as local .env.
+- Confirm model name matches a model available to your Gemini API key.
+- Commit and push code changes to GitHub; wait for Streamlit to redeploy.
+- Read the Streamlit app logs for the complete error.
+- Never paste API keys into public GitHub commits or chat.
+
+9. COMMON COMMANDS
+-----------------
+Check Python version:
+python --version
+
+Check pip:
+python -m pip --version
+
+Install dependencies:
+python -m pip install -r requirements.txt
+
+Update Gemini SDK:
+python -m pip install --upgrade google-genai
+
+Test Gemini key:
+python test_key.py
+
+Run app:
+python -m streamlit run app.py
+
+Compile/check syntax:
+python -m py_compile app.py comparison.py document_reader.py report_generator.py
+
+List files:
+dir
+
+Check whether .env exists:
+Test-Path .env
+
+Stop app:
+Ctrl + C
+
+10. IMPORTANT SECURITY NOTES
+----------------------------
+- The Gemini API key shared earlier in chat should be revoked.
+- Use a newly created, valid key in .env and Streamlit Secrets.
+- Keep .env in .gitignore.
+- A public GitHub repository makes its committed files visible to everyone.
+- If a secret was ever committed to GitHub, revoke it even if you later delete the file.
+- Never send your actual API key to anyone.
+
+TROUBLESHOOTING SUMMARY
+-----------------------
+- 401 UNAUTHENTICATED / API_KEY_INVALID: key or authentication configuration problem.
+- 503 UNAVAILABLE: temporary model/service demand; wait and retry.
+- "This file does not exist": verify the GitHub repository path and exact filename.
+- Streamlit cannot find app.py: set main file path to app.py or its correct relative path.
+
+This guide is a practical checklist. Exact model availability and cloud UI labels can change.
